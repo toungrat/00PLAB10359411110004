@@ -13,11 +13,11 @@ public class EmployeeDAOImpl implements EmpoyeeDAO{
 
     public static final String GET_ALL_EMP="select * from Employee";
 
-    public static final String FIND_EMP_BY_ID="select * from Emloyee where empID = ? ";
+    public static final String FIND_EMP_BY_ID="select * from Employee where emoID = ? ";
 
-    public static final String UPDATE_EMP = "update Emploree set Name = ?,Position=?,Salary=? where empID=?";
+    public static final String UPDATE_EMP = "update Employee set Name = ?,Position=?,Salary=? where emoID=?";
 
-    public static final String DELETE_EMP="delete from Employee where empID=?";
+    public static final String DELETE_EMP="delete from Employee where emoID=?";
 
     private static EmployeeDAOImpl instance = new EmployeeDAOImpl();
     public static EmployeeDAOImpl getInstance(){
@@ -95,10 +95,12 @@ public class EmployeeDAOImpl implements EmpoyeeDAO{
                 ResultSet rs = ps.executeQuery();
 
                 if (rs.next()) {
-                    int empid = rs.getInt(1);
+                    int emoid = rs.getInt(1);
                     String Name = rs.getString(2);
                     String Position = rs.getString(3);
                     double Salary = rs.getDouble(4);
+
+                    emp = new Employee(emoid,Name,Position,Salary);
 
                 }else {
                     System.out.println("Could not found employee with id:"+id);
@@ -124,9 +126,9 @@ public class EmployeeDAOImpl implements EmpoyeeDAO{
             PreparedStatement ps = conn.prepareStatement(UPDATE_EMP);
 
             ps.setString(1,emp.getName());
-            ps.setString(2,emp.getPosition();
-            ps.setDouble(3),emp.getSalary();
-            ps.setInt(4),emp.getEmpID();
+            ps.setString(2,emp.getPosition());
+            ps.setDouble(3,emp.getSalary());
+            ps.setInt(4,emp.getEmpID());
 
             int rs = ps.executeUpdate();
             if (rs!=0){
@@ -151,6 +153,8 @@ public class EmployeeDAOImpl implements EmpoyeeDAO{
             }else {
                 System.out.println("conld not delete employee with id"+id);
             }
+            ps.close();
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
